@@ -1,45 +1,39 @@
 var browserify = require('browserify');
 var babelify = require('babelify');
 var uglify = require('gulp-uglify');
-var config = require('../config');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
+var gulpif = require('gulp-if');
+var combiner = require('stream-combiner2');
 
-var development = (config.env === 'development');
-
-module.exports = function (gulp, entries, outputDir, includeTests) {
+module.exports = function (gulp, entries, outputDir, isDevelopment, outputFile) {
   return function () {
 
-    if(includeTests) {
-      entries = entries.concat(config.tests);
+    if(typeof outputFile === "undefined") {
+      outputFile = 'app.js';
     }
 
     // set up the browserify instance on a task basis
     var b = browserify({
       entries: entries,
-      debug: development,
+      debug: isDevelopment,
       transform: [babelify]
     });
 
-    var pipe = b.bundle()
-    .pipe(source('slacjs-app.js'))
-    .pipe(buffer());
+    var combined = combiner.obj([
+      b.bundle(),
+      source(outputFile),
+      buffer(),
+      gulpif(isDevelopment, sourcemaps.init({loadMaps: true})),
+      gulpif(!isDevelopment, uglify()),
+      gulpif(isDevelopment, sourcemaps.write('.')),
+      gulp.dest(outputDir),
+    ]);
 
-    if(development) {
-      pipe = pipe.pipe(sourcemaps.init({loadMaps: true}))
-      .on('error', gutil.log);
-    }
+    combined.on('error', console.error.bind(console));
 
-    if(!development) {
-      pipe = pipe.pipe(uglify());
-    }
-
-    if(development) {
-      pipe = pipe.pipe(sourcemaps.write('.'));
-    }
-
-    return pipe.pipe(gulp.dest(outputDir));
+    return combined;
   };
 };
