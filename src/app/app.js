@@ -1,44 +1,40 @@
-import THREE from 'three'
-import Plane from './view/objects/plane';
-import Ground from './models/environment/Ground';
+import Ground from './models/environment/ground';
+import Core from './models/Core';
+import CoreRenderer from './view/core-renderer';
+import Camera from './view/camera';
+import Scene from './view/scene';
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-var renderer = new THREE.WebGLRenderer();
+import THREE from 'three';
+
+const renderer = new THREE.WebGLRenderer();
 renderer.setClearColor(new THREE.Color(0xC8DDE0, 1.0));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
 document.body.appendChild( renderer.domElement );
 
-const ground = new Ground();
+const scene = new Scene();
+const camera = new Camera();
 
+const ground = new Ground();
 scene.add(ground);
 
-console.log(ground);
-
-
-camera.position.x = -20;
-camera.position.y = 30;
-camera.position.z = 40;
-camera.lookAt(new THREE.Vector3(0, 0, 0));
+const core = new Core();
+const box = new CoreRenderer(core);
+scene.add(box);
 
 // add subtle ambient lighting
-var ambientLight = new THREE.AmbientLight(0x00ff00);
+const ambientLight = new THREE.AmbientLight(0x111111);
 scene.add(ambientLight);
 
 // add spotlight for the shadows
-var spotLight = new THREE.SpotLight(0xffffff);
+const spotLight = new THREE.SpotLight(0xffffff);
 spotLight.position.set(-30, 60, 60);
 spotLight.castShadow = true;
 scene.add(spotLight);
 
+
 function render() {
   requestAnimationFrame( render );
-
-    /*cubes.forEach(function(c) {
-        c.rotation.x += Math.random() * 0.01;
-        c.rotation.y += Math.random() * 0.01;
-    })*/
 
   renderer.render( scene, camera );
 }
@@ -48,20 +44,20 @@ render();
 
 
 
-var groundGeom = new THREE.PlaneGeometry(100, 100, 4, 4);
-var groundMesh = new THREE.Mesh(groundGeom, new THREE.MeshBasicMaterial({color: 0x2F305C}));
+let groundGeom = new THREE.PlaneGeometry(100, 100, 4, 4);
+let groundMesh = new THREE.Mesh(groundGeom, new THREE.MeshBasicMaterial({color: 0x2F305C}));
 groundMesh.rotation.x = -Math.PI / 2;
 groundMesh.position.y = -20;
 scene.add(groundMesh);
 
-var material = new THREE.MeshLambertMaterial({color: 0x7777ff});
+let material = new THREE.MeshLambertMaterial({color: 0x7777ff});
 
-var cubes = [];
-for(var i = 0; i < 1000; i++)
+let cubes = [];
+for(let i = 0; i < 1000; i++)
 {
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    let geometry = new THREE.BoxGeometry( 1, 1, 1 );
 
-    var cube = new THREE.Mesh( geometry, material );
+    let cube = new THREE.Mesh( geometry, material );
 
     cube.position.x = Math.random() * 100 - 50;
     cube.position.y = Math.random() * 100 - 50;
