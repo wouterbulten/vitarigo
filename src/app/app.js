@@ -24,9 +24,11 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const ground = new Ground();
 scene.add(ground);
 
-const core = new Core();
-const box = new CoreRenderer(core);
-scene.add(box);
+for(let i = 0; i < 100; i++) {
+  const core = new Core();
+  const box = new CoreRenderer(core);
+  scene.add(box);
+}
 
 const light = new THREE.HemisphereLight(0xffffff, 0xffffff, .5)
 

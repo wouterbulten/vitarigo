@@ -8,6 +8,10 @@ export default class CoreRenderer extends Box {
     this.castShadow = true;
     this.receiveShadow = false;
 
+    this.position.x = 100 * Math.random() - 50;
+    this.position.y = 100 * Math.random();
+    this.position.z = 100 * Math.random() - 50;
+
     this.core = core;
   }
 
