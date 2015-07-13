@@ -1,9 +1,12 @@
-import Box from './objects/box';
+import Box from '../objects/box';
 
 export default class CoreRenderer extends Box {
 
   constructor(core) {
     super(...core.getDimensions(), core.getColor());
+
+    this.castShadow = true;
+    this.receiveShadow = false;
 
     this.core = core;
   }

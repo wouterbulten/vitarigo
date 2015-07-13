@@ -9,6 +9,6 @@ export default class Core {
   }
 
   getDimensions() {
-    return [2 + Math.random(), 2 + Math.random(), 2 + Math.random()];
+    return [20 + Math.random(), 20 + Math.random(), 20 + Math.random()];
   }
 }

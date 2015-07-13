@@ -1,9 +1,9 @@
-import Ground from './models/environment/ground';
+import Ground from './view/models/ground';
 import Core from './models/Core';
-import CoreRenderer from './view/core-renderer';
-import Camera from './view/camera';
+import CoreRenderer from './view/models/core-renderer';
+import Camera from './view/ui/camera';
 import Scene from './view/scene';
-import OrbitControls from './view/control/orbit-control';
+import OrbitControls from './view/ui/orbit-control';
 
 import THREE from 'three';
 
@@ -28,16 +28,21 @@ const core = new Core();
 const box = new CoreRenderer(core);
 scene.add(box);
 
-// add subtle ambient lighting
-const ambientLight = new THREE.AmbientLight(0x111111);
-scene.add(ambientLight);
+const light = new THREE.HemisphereLight(0xffffff, 0xffffff, .5)
 
-// add spotlight for the shadows
-const spotLight = new THREE.SpotLight(0xffffff);
-spotLight.position.set(-30, 60, 60);
-spotLight.castShadow = true;
-scene.add(spotLight);
+const shadowLight = new THREE.DirectionalLight(0xffffff, .8);
+shadowLight.position.set(200, 200, 200);
+shadowLight.castShadow = true;
+shadowLight.shadowDarkness = .2;
 
+const backLight = new THREE.DirectionalLight(0xffffff, .4);
+backLight.position.set(-100, 200, 50);
+backLight.shadowDarkness = .1;
+backLight.castShadow = true;
+
+scene.add(backLight);
+scene.add(light);
+scene.add(shadowLight);
 
 function render() {
   requestAnimationFrame( render );
