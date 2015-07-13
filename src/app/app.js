@@ -3,10 +3,14 @@ import Core from './models/Core';
 import CoreRenderer from './view/core-renderer';
 import Camera from './view/camera';
 import Scene from './view/scene';
+import OrbitControls from './view/control/orbit-control';
 
 import THREE from 'three';
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true
+  });
 renderer.setClearColor(new THREE.Color(0xC8DDE0, 1.0));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
@@ -14,6 +18,8 @@ document.body.appendChild( renderer.domElement );
 
 const scene = new Scene();
 const camera = new Camera();
+
+const controls = new OrbitControls(camera, renderer.domElement);
 
 const ground = new Ground();
 scene.add(ground);
