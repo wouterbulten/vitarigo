@@ -1,6 +1,9 @@
 import Ground from './view/models/ground';
+import Organism from './models/organism';
+import OrganismRenderer from './view/models/organism-renderer';
 import Core from './models/Core';
-import CoreRenderer from './view/models/core-renderer';
+import Axon from './models/Axon';
+import AxonRenderer from './view/models/axon-renderer';
 import Camera from './view/ui/camera';
 import Scene from './view/scene';
 import OrbitControls from './view/ui/orbit-control';
@@ -9,8 +12,8 @@ import THREE from 'three';
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true,
-    antialias: true
-  });
+    antialias: true,
+});
 renderer.setClearColor(new THREE.Color(0xC8DDE0, 1.0));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
@@ -24,20 +27,28 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const ground = new Ground();
 scene.add(ground);
 
-for(let i = 0; i < 100; i++) {
-  const core = new Core();
-  const box = new CoreRenderer(core);
-  scene.add(box);
+const organism = new Organism();
+
+organism.addPart(new Core(), 1, 0, 0);
+organism.addPart(new Core(), 2, 0, 0);
+organism.addPart(new Core(), 1, 1, 0);
+
+const organismRenderer = new OrganismRenderer(organism);
+
+for (let i = 0; i < 100; i++) {
+  organism.addPart(new Core(), Math.floor(Math.random() * 10), Math.floor(Math.random() * 10), Math.floor(Math.random() * 10));
 }
 
-const light = new THREE.HemisphereLight(0xffffff, 0xffffff, .5)
+organismRenderer.renderTo(scene);
 
-const shadowLight = new THREE.DirectionalLight(0xffffff, .8);
+const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+
+const shadowLight = new THREE.DirectionalLight(0xffffff, 0.8);
 shadowLight.position.set(200, 200, 200);
 shadowLight.castShadow = true;
-shadowLight.shadowDarkness = .2;
+shadowLight.shadowDarkness = 0.2;
 
-const backLight = new THREE.DirectionalLight(0xffffff, .4);
+const backLight = new THREE.DirectionalLight(0xffffff, 0.4);
 backLight.position.set(-100, 200, 50);
 backLight.shadowDarkness = .1;
 backLight.castShadow = true;
