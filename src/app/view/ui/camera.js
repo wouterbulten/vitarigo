@@ -3,7 +3,7 @@ import THREE from 'three';
 export default class Camera extends THREE.PerspectiveCamera {
 
   constructor() {
-    super(75, window.innerWidth / window.innerHeight, 1, 1000);
+    super(75, window.innerWidth / window.innerHeight, 1, 10000);
 
     this.position.x = 30;
     this.position.y = 100;
